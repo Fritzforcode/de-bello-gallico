@@ -1,0 +1,45 @@
+body {
+    background-color: #312f2d;
+    color: rgb(225, 225, 225);
+    font-family: "Inter", sans-serif;
+}
+
+h1 {
+    
+    font-family: "Inter", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
+    text-align: center;
+}
+
+.interface {
+    width: 85%;
+    max-width: 500px;  /* Limit the width */
+    max-height: 281px; /* (500px * 9 / 16) = 281px */
+    background-color: rgb(225, 225, 225);
+    border-radius: 15px;
+    margin: 0 auto;
+    box-shadow: 0 0 15px rgba(225, 225, 225, 0.9);
+    color: #312f2d;
+
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    /* Dynamically set height based on width with aspect ratio 16:9 */
+    height: calc(100% * 9 / 16);
+    
+    /* Limit the height */
+}
+
+#latin {
+    font-size: min(20vw, 120px);
+    font-weight: 700;
+}
+
+#german {
+    font-size: min(4vw, 30px);
+    font-weight: 700;
+}
+
