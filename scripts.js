@@ -17,18 +17,43 @@ async function fetchJSONData(file) {
     if (vocabulary) {
         let vocIndex = 0;
         let voc = vocabulary[vocIndex];
-        console.log(voc);
-        document.getElementById("latin").innerHTML = voc.latin;
+        const frontsideElement = document.getElementById("frontside")
+        frontsideElement.innerHTML = voc.latin;
 
         const lines = voc.german.split("\n"); // Split the German text into lines
-        const germanElement = document.getElementById("german-field");
-        germanElement.innerHTML = ""; // Clear existing content
+        const backsideElement = document.getElementById("backside");
+        backsideElement.innerHTML = ""; // Clear existing content
+
+        if (voc.grammar_info) {
+            const p = document.createElement("p");
+            p.id = "backside-line";
+            p.textContent = voc.grammar_info; 
+            backsideElement.appendChild(p);
+        }
 
         lines.forEach(line => {
             const p = document.createElement("p");
-            p.id = "german";
-            p.textContent = line;  // Set the text of the <p> element
-            germanElement.appendChild(p);  // Append the <p> to the #german element
+            p.id = "backside-line";
+            p.textContent = line;
+            backsideElement.appendChild(p);
         });
     }
 })();
+
+// Wait until DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+    const wrongButton = document.getElementById("voc-wrong");
+    const correctButton = document.getElementById("voc-correct");
+
+    wrongButton.addEventListener("click", () => {
+        console.log("Marked as wrong");
+        // Add your logic here (e.g., highlight red, count wrong answers, etc.)
+    });
+
+    correctButton.addEventListener("click", () => {
+        console.log("Marked as correct");
+        // Add your logic here (e.g., go to next word, store result, etc.)
+    });
+});
+
+

@@ -1,5 +1,5 @@
 vocabulary = [
-# ================ SEITE 1 ================ #
+# ================ SEITE 4/5 ================ #
 
 # -------- A -------- #
 ["a, ab", "von, von ... her"],
@@ -119,7 +119,7 @@ vocabulary = [
 ["concedere", "-cessi, -cessum", "1. erlauben\n2. geben"],
 ["concilium", "-ii n", "Versammlung"],
 
-# ================ SEITE 2 ================ #
+# ================ SEITE 6/7 ================ #
 
 ["concurrere", "-curri, -cursum", "1. laufen\n2. zusammenlaufen"],
 ["condicio", "-onis f", "Bedingung"],
@@ -230,7 +230,7 @@ vocabulary = [
 ["etsi", "obgleich"],
 ["evocare", "-vi, -tum", "1. herausrufen\n2. kommen lassen"],
 
-# ================ SEITE 3 ================ #
+# ================ SEITE 8/9 ================ #
 
 ["e, ex", "1. aus\n2. auf Grund\n3. seit"],
 ["excedere", "-cessi, -cessum", "sich entfernen"],
@@ -272,6 +272,132 @@ vocabulary = [
 ["fuga", "-ae f", "Flucht"],
 ["fugere", "-io, fugi, fugitum", "fliehen"],
 # -------- G -------- #
-# ...
+["genus", "-neris n", "Art", "[gerere, gessi, gestum]", [
+    ["geri (pass.)", "geschehen"],
+    ["bellum gerere", "Krieg führen"]]],
+["gratia", "-ae f", "1. Ansehen\n2. Dank"],
+["gravis", "(-e), -is", "1. schwer\n2. ernst"],
+# -------- H -------- #
+["habere", "-ui, -itum", "haben"],
+["hiberna", "-orum n", "Winterlager"],
+["hic", "(haec, hoc)", "dieser"],
+["hiemare", "-vi, -tum", "überwintern"],
+["hiems", "-mis f", "Winter"],
+["homo", "-minis m", "Mensch"],
+["hora", "-ae f", "Stunde"],
+["hortari", "-tus sum", "auffordern"],
+["hostis", "-is m", "Feind"],
+["huc", "hierher"],
+# -------- I -------- #
+["iam", "1. schon\n2. (neg.) mehr (z.B. neque iam)"],
+["ibi", "dort"],
+["idem", "(eadem, idem)", "derselbe"],
+["idoneus", "(-a, -um)", "geeignet"],
+["ignis", "-is m", "Feuer"],
+["ille", "(illa, illud)", "jener"],
+["impedimenta", "Gepäck"],
+["impedire", "-vi, -tum", "behindern"],
+["imperare", "-vi, -tum", "1. befehlen\n2. anfordern"],
+["imperator", "-oris m", "Feldherr"],
+["imperitus", "(-a, -um)", "unerfahren"],
+["imperium", "-ii n", "1. Oberbefehl\n2. Herrschaft"],
+["impetrare", "durchsetzen"],
+["impetus", "-us m", "Angriff"],
+["in", "I.(m. Akk.) in/nach/gegen\nII.(m. Abl.) in/auf/bei"],
+["incendere", "-cendi, -censum", "anzünden"],
+["incitare", "-vi, -tum", "antreiben"],
+["incolere", "-colui, -cultum", "1. wohnen\n2. bewohnen"],
+["incolumnis", "(-e), -is", "wohlbehalten, ohne Verluste"],
+["incommodum", "-i n", "Unannehmlichkeit"],
+["inde", "1. von dort\n2. daraufhin"],
+["inferior", "(-ius), -oris Superl. infimus", "der untere"],
+
+["inferre", "infero, intuli, illatum", "1. bringen\n2. zufügen", [
+    ["bellum inferre", "den Krieg beginnen"],
+    ["singa inferre", "angreifen"]]],
+["iniquus", "(-a, um)", "1. uneben\n2. ungleich\n3. ungünstig\n4. ungerecht"],
+["inire", "-eo, -ii, -itum", "beginnen", [
+    ["consilium inire", "einen Plan fassen"]]],
+["initium", "-ii n", "Anfang"],
+["iniuria", "-ae f", "Unrecht, Ungerechtigkeit"],
+["inopia", "-ae f", "Mangel"],
+["inquit", "sagt(e) er"],
+["insequi", "-secutus sum", "1. folgen\n2. verfolgen"],
+["instituere", "-tui, -tutum", "1. einrichten\n2. anfangen"],
+["intruere", "-struxi, -structum", "aufstellen"],
+["insula", "-ae f", "Insel"],
+["intellegere", "-lexi, -lectum", "merken"],
+["inter", "zwischen, unter"],
+["intercludere", "-clusi, -clusum", "abschneiden"],
+["interficere", "-io, -feci, -fectum", "töten"],
+["interim", "inzwischen"],
+["intermittere", "-misi, -missum", "1. unterbrechen\n2. dazwischentreten lassen(Zeit, Raum)"],
+["intra", "innerhalb"],
+["ipse", "(ipsa, ipsum)", "1. selbst persönlich\n2. selbst gerade\n3. selbst schon"],
+["ire", "eo, ii, itum", "gehen"],
+["is", "(ea, id)", "1. dieser\n2. der (z.B. is, qui)\n3. er"],
+["ita", "so"],
+["itaque", "daher"],
+["item", "ebenso"],
+
+# ================ SEITE 10/11 ================ #
+
+["iter", "itineris n", "1. Weg\n2. Marsch"],
+["iubere", "iussi, iussum", "befehlen"],
+["iudicare", "-vi, -tum", "1. entscheiden\n2. meinen"],
+["iugum", "-i n", "Bergrücken"],
+["ius", "iuris n", "Recht"],
+["ius iurandum", "-i n" "Eid"],
+# -------- L -------- #
+["labor", "-oris m", "1. Tätigkeit, Anstrengung\n2. Mühe"],
+["laborare", "-vi, -tum", "in Schwierigkeiten sein"],
+["latus", "(-a, -um)", "breit", [
+    ["late", "weit"]]],
+["latus", "-teris n", "Seite"],
+["laus", "laudis f", "Ruhm"],
+["legatio", "-onis f", "Gesandschaft"],
+["legatus", "-i m", "1. Gesandter\n2. Unterfeldherr, Legat"],
+["legio", "-onis f", "Legion"],
+["levis", "(-e), -is", "leicht"],
+["lex", "legis f", "Gesetz"],
+["liberi", "-orum m", "Kinder"],
+["libertas", "-atis f", "Freiheit"],
+["licet", "-uit", "es ist erlaubt"],
+["litterae", "-arum f", "Brief"],
+["locus", "-i m", "1. Ort\n2. Stellung"],
+["longe", "1. weit\n2. bei weitem(z. B. maximus)"],
+["longus", "(-a, -um)", "lang"],
+["lux", "lucis f", "Licht"],
+# -------- M -------- #
+["magis", "Superl. maxime", "mehr"],
+["magistratus", "-us m", "1. Beamter\n2. Amt"],
+
+["magnitudo", "-dinis f", "Größe"],
+["magnus", "(-a, -um)", "groß", "Komp. maior Superl. maximus"],
+["mandare", "-vi, -tum", "auftragen"],
+["manus", "-us f", "1. Hand\n2. Schar"],
+["mare", "maris n", "Meer"],
+["maturus", "(-a, -um)", "reif"],
+["medius", "(-a, -um)", "1. der mittlere\n2. mitten (z.B. per medios fines)"],
+["memoria", "-ae f", "1. Erinnerung\n2. Zeit"],
+["merere", "-ui", "verdienen"],
+["miles", "-litis m", "Soldat"],
+["militaris", "(-e), -is", "militärisch"],
+["mille", "Plur. milia", "tausend"],
+["minuere", "-ui, -minutum", "vermindern"],
+["minus", "Superl. minime", "weniger"],
+["mittere", "misi, missum", "schicken"],
+["modo", "nur"],
+["modus", "-i m", "Art"],
+["mons", "montis m", "Berg"],
+["morari", "-tus sum", "1. sich aufhalten\n2. aufhalten"],
+["mors", "mortis f", "Tod"],
+["mos", "moris m", "Sitte"],
+["motus", "-us m", "1. Bewegung\n2. Aufstand"],
+["movere", "movi, motum", "bewegen", [
+    ["castra movere", "aufbrechen"]]],
+["multi", "(-ae, -a)", "viele"],
+["munire", "-vi, -tum", "1. befestigen\n2. schützen\n3. befestigt anlegen(z.B. castra)"],
+
 
 ]

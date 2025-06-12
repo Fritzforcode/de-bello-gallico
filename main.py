@@ -56,5 +56,5 @@ for i, voc in enumerate(raw_vocabulary):
 import json
 print(json.dumps(parsed_vocabulary))
 with open("vocabulary.json", "w") as file:
-    file.write(json.dumps(parsed_vocabulary))
+    json.dump(parsed_vocabulary, file)
 
