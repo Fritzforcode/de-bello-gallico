@@ -1,1 +1,3 @@
-- add sub vocs
+#TODOs:
+#    - correct offset when restoring progress
+#    - preview table: add sub vocs correctly

@@ -51,10 +51,13 @@ for i, voc in enumerate(raw_vocabulary):
     #print("-", parsed_voc)
     #if i % 3 == 3-1:
     #    print()
-    if parsed_voc["latin"].startswith("f"):
-        parsed_vocabulary.append(parsed_voc)
+    #if parsed_voc["latin"].startswith("f"):
+    parsed_vocabulary.append(parsed_voc)
+    if parsed_voc["latin"] == "de":
+        break
 import json
-print(json.dumps(parsed_vocabulary))
+#print(json.dumps(parsed_vocabulary))
+print(len(parsed_vocabulary))
 with open("vocabulary.json", "w") as file:
     json.dump(parsed_vocabulary, file)
 

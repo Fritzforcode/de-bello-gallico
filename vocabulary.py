@@ -30,7 +30,7 @@ vocabulary = [
 ["agmen", "-minis n", "Heer (auf dem Marsch)"],
 
 ["aliquis", "(aliquid) (subst.)", "irgendjemand, -einer, (-etwas)"],
-["aliqui", "(-quae, -quod) (adj.)", "irgendein, (-eine)", "{'aliqui nomo'}"],
+["aliqui", "(-quae, -quod) (adj.)", "irgendein, (-eine)", "{'aliqui nomo'}"], # TODO
 ["alius", "(-a, -ud)", "ein anderer", [
     ["alii ... alii", "die einen ... die anderen"]]],
 ["alter", "-era -erum", "1. der andere\n2. der zweite", [
@@ -74,7 +74,7 @@ vocabulary = [
 ["beneficium", "-ii n", "1. Wohltat\n2. das Verdienst"],
 ["bonus", "(-a, -um)", "gut", "Komp. melior\nSuperl. optimus"],
 # -------- C -------- #
-["caedes", "-is f", "Morden"],
+["caedes", "-is f", "Mord/Morden"],
 ["calamitas", "-atis f", "Niederlage"],
 ["capere", "-io, cepi, captum", "1. fassen\n2. fangen\n3. einnehmen"],
 ["captivus", "-i m", "Gefangener"],
@@ -88,7 +88,7 @@ vocabulary = [
 ["celeritas", "-atis f", "Schnelligkeit"],
 
 ["celeriter", "schnell"],
-["centrum", "hundert"],
+["centum", "hundert"],
 ["centurio", "-onis m", "Hauptmann, Centurio"],
 ["certus", "(-a, -um)", "bestimmt", [
     ["certiorem facere", "benachrichtigen"]]],
@@ -131,7 +131,7 @@ vocabulary = [
 ["confimare", "-vi, -tum", "1. versichern\n2. verstärken\n3. ermutigen",],
 ["conicere", "-io, -ieci, -iectum", "werfen"],
 ["coniungere", "-iunxi, -iuntum", "verbinden"],
-["coniurare", "-vi, -tum", "sich verwschwören"],
+["coniurare", "-vi, -tum", "sich verschwören"],
 ["consequi", "-secutus sum", "1. verfolgen\n2. erreichen"],
 ["considere", "-sedi, -sessum", "sich niederlassen"],
 ["consilium", "-ii n", "1. Rat\n2. Plan\n3. Beschluß"],
@@ -398,6 +398,49 @@ vocabulary = [
     ["castra movere", "aufbrechen"]]],
 ["multi", "(-ae, -a)", "viele"],
 ["munire", "-vi, -tum", "1. befestigen\n2. schützen\n3. befestigt anlegen(z.B. castra)"],
+
+["munitio", "-onis f", "Befestigung"],
+["murus", "-i m", "Mauer"],
+# -------- N -------- #
+["nam", "denn"],
+["nanisci", "na(n)ctus sum", "zufällig finden, erlangen"],
+["nasci", "natus sum", "entstehen", [
+    ["natus", "geboren, stammend"]]],
+["natio", "-onis f", "Volk"],
+["natura", "-ae f", "Beschaffenheit"],
+["navis", "-is f", "Schiff"],
+["ne", "daß nicht, damit nicht"],
+["ne ... quidem", "nicht einmal"],
+["necessarius", "(-a, -um)", "notwendig", "Adv. necessario"],
+["negat + Akk.(hinzugefügt)", "er sagt, dass er nicht...", ],
+["neglegere", "-lexi, -lectum", "nicht beachten"],
+["negotium", "-ii n", "Aufgabe, Sache"],
+["nemo", "niemand"],
+["neque, nec", "1. und nicht\n2. aver nicht\n3. auch nicht", [
+    ["neque ... neque", "weder ... noch"]]],
+["neve, neu", "und daß nicht, und damit nicht"],
+["nihil", "1. nichts\n2. in keiner Weise"],
+["nisi", "1. wenn nicht\n2. außer"],
+["nobilis", "(-e), -is", "vornehm"],
+["noctu", "bei Nacht"],
+["nomen", "-minis n", "Name"],
+["non", "nicht"],
+["nonnulli", "(-ae, -a)", "einige"],
+["nos", "wir"],
+["noster", "(-tra, -trum)", "unser", [
+    ["nostri", "unsere Leute"]]],
+["novus", "(-a, -um)", "neu", [
+    ["novissimus", "der letzte"]]],
+["nox", "noctis f", "Nacht"],
+["nullus", "(-a, -um)", "kein"],
+
+["numerus", "-i m", "Zahl"],
+["nuntiare", "-vi, -tum", "melden"],
+["nuntius", "-ii m", "1. Bote\n2. Nachricht"],
+# -------- O -------- #
+["ob", "wegen"],
+
+
 
 
 ]
