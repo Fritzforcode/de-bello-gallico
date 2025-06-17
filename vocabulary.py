@@ -439,8 +439,28 @@ vocabulary = [
 ["nuntius", "-ii m", "1. Bote\n2. Nachricht"],
 # -------- O -------- #
 ["ob", "wegen"],
-
-
-
-
+["obsidere", "-sedi, -sessum", "belagern"],
+["obsides", "-um", "m", "Geiseln"],
+["obtinere", "-ui, -tentum", "innehaben"],
+["occidere", "-cidi, -cisum", "töten"],
+["occultare", "-vi, -tum", "verbergen"],
+["occupare", "-vi, -tum", "besetzen", [
+    ["occupatus", "beschäftigt"]]],
+["occurrere", "-curri, -cursum", "entgegenlaufen"],
+["octo", "acht"],
+["officium", "-ii n", "1. Pflicht\n2. Gehorsam"],
+["omnino", "im ganzen, überhaupt"],
+["omnis", "(-e), -is", "1. ganz\n2. jeder\n3. Plur. alle"],
+["opinio", "-onis f", "1. Vermutung\n2. Ruf"],
+["opportet", "-uit", "es ist nötig, man muß"],
+["oppidum", "-i n", "Stadt"],
+["opportunus", "(-a, -um)", "günstig"],
+["oppugnare", "-vi, -tum", "angreifen"],
+["oppugnatio", "-onis f", "Bestürmung"],
+["opus", "operis n", "1. Arbeit\n2. Befestigung", [
+    ["opus est", "es ist nötig"]]],
+["oratio", "-onis f", "Rede"],
+["ordo", "-dinis m", "1. Reihe\n2. Rang"],
+["oriri", "ortus sum", "entstehen"],
+["ostendere", "-tendi", "1. zeigen\n2. erklären"],
 ]

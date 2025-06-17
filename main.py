@@ -53,11 +53,32 @@ for i, voc in enumerate(raw_vocabulary):
     #    print()
     #if parsed_voc["latin"].startswith("f"):
     parsed_vocabulary.append(parsed_voc)
-    if parsed_voc["latin"] == "de":
-        break
 import json
-#print(json.dumps(parsed_vocabulary))
-print(len(parsed_vocabulary))
+
+voc_indecies = [info["latin"] for info in parsed_vocabulary]
+print(voc_indecies)
+
+pages = {
+    4: ("a, ab", "atque, ac"),
+    5: ("attingere", "concilium"),
+    6: ("concurrere", "de"),
+    7: ("debere", "evocare"),
+    8: ("e, ex", "huc"),
+    9: ("iam", "item"),
+    10: ("iter", "munire"),
+    11: ("munitio", "ostendere"),
+#    12: ("pabulum", "praesens"),
+#    13: ("praesidium", "quo"),
+#    14: ("quod", "spes"),
+#    15: ("statuere", "uti"),
+#    16: ("vadum", "vulnus"),
+}
+
+content = {
+    "vocs": parsed_vocabulary,
+    "pages": {page_idx: (voc_indecies.index(page[0]), voc_indecies.index(page[1])) for page_idx, page in pages.items()}
+}
+print(content)
 with open("vocabulary.json", "w") as file:
-    json.dump(parsed_vocabulary, file)
+    json.dump(content, file)
 
