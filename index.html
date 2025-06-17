@@ -45,6 +45,16 @@
       text-align: center;
       margin-top: 1rem;
     }
+    .import-export {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    .import-export input[type="file"] {
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -53,6 +63,10 @@
     <button class="button" onclick="showSectionSelect()">Sektion wählen</button>
     <button class="button" onclick="showHistory()">Lernverlauf anzeigen</button>
     <button class="button red" onclick="resetAllProgress()">Fortschritt zurücksetzen</button>
+    <div class="import-export">
+      <button class="button" onclick="exportProgress()">Fortschritt exportieren</button>
+      <input type="file" onchange="importProgress(event)" />
+    </div>
   </div>
 
   <div class="card" id="card" style="display:none;">
@@ -118,21 +132,30 @@
     }
 
     function splitSections() {
+      sections = [];
       for (let i = 0; i < vocabulary.length; i += sectionSize) {
-        sections.push(vocabulary.slice(i, i + sectionSize));
+        const start = i;
+        const end = Math.min(i + sectionSize - 1, vocabulary.length - 1);
+        const vocabs = vocabulary.slice(start, end + 1);
+
+        const includedPages = Object.entries(pages)
+          .filter(([_, [pStart, pEnd]]) => !(pEnd < start || pStart > end))
+          .map(([pageNum]) => parseInt(pageNum));
+
+        const pageLabel = includedPages.length === 1
+          ? `S.${includedPages[0]}`
+          : `S.${Math.min(...includedPages)}–${Math.max(...includedPages)}`;
+
+        const sectionName = `${vocabulary[start]?.latin} – ${vocabulary[end]?.latin} (${pageLabel})`;
+
+        sections.push({ vocabs, start, end, pageRange: pageLabel, name: sectionName });
       }
     }
 
     function showSectionSelect() {
       let html = `<h3>Wähle eine Sektion</h3>`;
       sections.forEach((section, i) => {
-        const first = section[0]?.latin;
-        const last = section[section.length - 1]?.latin;
-        const startIndex = i * sectionSize;
-        const pageNumbers = Object.entries(pages)
-          .filter(([_, [start, end]]) => start <= startIndex && end >= startIndex)
-          .map(([p]) => p).join(', ');
-        html += `<button class="button" onclick="selectSection(${i})">${i + 1}: ${first} – ${last} (Seite ${pageNumbers})</button><br>`;
+        html += `<button class="button" onclick="selectSection(${i})">${section.name}</button><br>`;
       });
       document.getElementById("section-select").innerHTML = html;
       document.getElementById("section-select").style.display = "block";
@@ -147,7 +170,7 @@
     }
 
     function showSectionOverview() {
-      const section = sections[currentSectionIndex];
+      const section = sections[currentSectionIndex].vocabs;
       let html = `<h3>Sektionsüberblick</h3><table><tr><th>Latein</th><th>Grammatik</th><th>Deutsch</th></tr>`;
       section.forEach(v => {
         html += `<tr><td>${v.latin}
@@ -169,7 +192,7 @@
     }
 
     function loadCurrentCard() {
-      const section = sections[currentSectionIndex];
+      const section = sections[currentSectionIndex].vocabs;
       if (!section || currentWordIndex >= section.length) {
         endSection();
         return;
@@ -185,7 +208,6 @@
       document.getElementById("know-btn").className = "button grey";
       document.getElementById("dont-know-btn").className = "button grey";
 
-      // Save session state
       localStorage.setItem("sessionState", JSON.stringify({ section: currentSectionIndex, index: currentWordIndex }));
     }
 
@@ -206,7 +228,7 @@
     }
 
     function answered(knew) {
-      const vocIndex = currentSectionIndex * sectionSize + currentWordIndex;
+      const vocIndex = sections[currentSectionIndex].start + currentWordIndex;
       if (!results[vocIndex]) results[vocIndex] = { total: 0, right: 0 };
       results[vocIndex].total++;
       if (knew) results[vocIndex].right++;
@@ -254,6 +276,34 @@
         showMenu();
       }
     }
+
+    function exportProgress() {
+      const data = localStorage.getItem("vocabResults");
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "vokabel_fortschritt.json";
+      a.click();
+    }
+    
+    function importProgress(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          localStorage.setItem("vocabResults", JSON.stringify(imported));
+          alert("Fortschritt importiert!");
+          loadHistory();
+        } catch (err) {
+          alert("Ungültige Datei!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
   </script>
 </body>
 </html>
