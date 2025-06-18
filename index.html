@@ -5,56 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Latein Vokabeltrainer</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 1rem;
-    }
-    .card, .menu, .history {
-      background-color: #fff;
-      padding: 2rem;
-      margin: 1rem auto;
-      width: 90%;
-      max-width: 700px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      border-radius: 10px;
-    }
-    h2, h3 { text-align: center; }
-    .button {
-      margin: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    .green { background-color: #4CAF50; color: white; }
-    .red { background-color: #f44336; color: white; }
-    .grey { background-color: #ccc; color: #666; cursor: not-allowed; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      padding: 0.5rem;
-      border: 1px solid #ddd;
-    }
-    .section-controls {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    .import-export {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-    }
-    .import-export input[type="file"] {
-      margin-top: 0.5rem;
-    }
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 1rem; }
+    .card, .menu, .history { background: #fff; padding: 2rem; margin: 1rem auto; width: 90%; max-width: 700px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2,h3 { text-align: center; }
+    .button { margin: .5rem; padding: .75rem 1.5rem; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+    .green { background: #4CAF50; color: white; }
+    .red { background: #f44336; color: white; }
+    .grey { background: #ccc; color: #666; cursor: not-allowed; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: .5rem; border: 1px solid #ddd; }
+    .section-controls { text-align: center; margin-top: 1rem; }
+    input[type="number"] { width: 60px; margin-right: 1rem; }
   </style>
 </head>
 <body>
@@ -63,7 +24,7 @@
     <button class="button" onclick="showSectionSelect()">Sektion wählen</button>
     <button class="button" onclick="showHistory()">Lernverlauf anzeigen</button>
     <button class="button red" onclick="resetAllProgress()">Fortschritt zurücksetzen</button>
-    <div class="import-export">
+    <div style="margin-top:1rem;">
       <button class="button" onclick="exportProgress()">Fortschritt exportieren</button>
       <input type="file" onchange="importProgress(event)" />
     </div>
@@ -71,11 +32,14 @@
 
   <div class="card" id="card" style="display:none;">
     <h2 id="card-front">LATIN</h2>
-    <div id="card-back" style="display: none;"></div>
+    <div id="card-back" style="display:none;"></div>
     <button class="button" onclick="reveal()">Lösung zeigen</button>
     <div class="section-controls">
       <button id="know-btn" class="button grey" onclick="answered(true)" disabled>Gewusst</button>
       <button id="dont-know-btn" class="button grey" onclick="answered(false)" disabled>Nicht gewusst</button>
+    </div>
+    <div class="section-controls">
+      <button class="button" onclick="showMenu()">Zurück zum Menü</button>
     </div>
   </div>
 
@@ -84,16 +48,12 @@
   <div class="card history" id="history-view" style="display:none;"></div>
 
   <script>
-    let vocabulary = [];
-    let sections = [];
-    let pages = {};
-    let sectionSize = 25;
-    let currentSectionIndex = 0;
-    let currentWordIndex = 0;
-    let results = {}; // { [vocabIndex]: { right, total } }
-    let sessionResults = {};
-    let sessionState = null;
+    let vocabulary = [], pages = {}, sections = [];
+    const sectionSize = 25;
+    let currentSectionIndex = 0, currentWordIndex = 0;
+    let results = {}, sessionResults = {}, sessionState = null;
 
+    //<!-- START VOCABULARY EMBED -->
     fetch("vocabulary.json")
       .then(r => r.json())
       .then(data => {
@@ -103,6 +63,7 @@
         loadHistory();
         checkSessionResume();
       });
+    //<!-- END VOCABULARY EMBED -->
 
     function checkSessionResume() {
       const saved = localStorage.getItem("sessionState");
@@ -118,17 +79,7 @@
           localStorage.removeItem("sessionState");
           showMenu();
         }
-      } else {
-        showMenu();
-      }
-    }
-
-    function showMenu() {
-      document.getElementById("main-menu").style.display = "block";
-      document.getElementById("card").style.display = "none";
-      document.getElementById("overview").style.display = "none";
-      document.getElementById("section-select").style.display = "none";
-      document.getElementById("history-view").style.display = "none";
+      } else showMenu();
     }
 
     function splitSections() {
@@ -137,173 +88,199 @@
         const start = i;
         const end = Math.min(i + sectionSize - 1, vocabulary.length - 1);
         const vocabs = vocabulary.slice(start, end + 1);
-
         const includedPages = Object.entries(pages)
-          .filter(([_, [pStart, pEnd]]) => !(pEnd < start || pStart > end))
-          .map(([pageNum]) => parseInt(pageNum));
-
-        const pageLabel = includedPages.length === 1
-          ? `S.${includedPages[0]}`
-          : `S.${Math.min(...includedPages)}–${Math.max(...includedPages)}`;
-
-        const sectionName = `${vocabulary[start]?.latin} – ${vocabulary[end]?.latin} (${pageLabel})`;
-
-        sections.push({ vocabs, start, end, pageRange: pageLabel, name: sectionName });
+          .filter(([_,rng]) => !(rng[1] < start || rng[0] > end))
+          .map(([pg]) => parseInt(pg));
+        const plabel = includedPages.length === 1 ? `S.${includedPages[0]}` : `S.${Math.min(...includedPages)}–${Math.max(...includedPages)}`;
+        const sectionName = `${vocabulary[start].latin} – ${vocabulary[end].latin} (${plabel})`;
+        sections.push({ vocabs, start, end, name: sectionName, isCustom:false});
       }
     }
 
     function showSectionSelect() {
       let html = `<h3>Wähle eine Sektion</h3>`;
-      sections.forEach((section, i) => {
-        html += `<button class="button" onclick="selectSection(${i})">${section.name}</button><br>`;
+      html += `<strong>Vordefinierte Lektionen:</strong><br>`;
+      sections.forEach((sec,i) => {
+        if (!sec.isCustom) html += `<button class="button" onclick="selectSection(${i})">${sec.name}</button><br>`;
       });
+      const customs = sections.filter(s=>s.isCustom);
+      if (customs.length) {
+        html += `<br><strong>Benutzerdefinierte Lektionen:</strong><br>`;
+        customs.forEach(sec => {
+          const idx = sections.indexOf(sec);
+          html += `<button class="button" onclick="selectSection(${idx})">${sec.name}</button><br>`;
+        });
+      }
       document.getElementById("section-select").innerHTML = html;
-      document.getElementById("section-select").style.display = "block";
-      document.getElementById("main-menu").style.display = "none";
+      document.getElementById("section-select").style.display="block";
+      document.getElementById("main-menu").style.display="none";
     }
 
-    function selectSection(index) {
-      currentSectionIndex = index;
+    function selectSection(idx) {
+      currentSectionIndex = idx;
       currentWordIndex = 0;
       sessionResults = {};
+      document.getElementById("section-select").style.display="none";
       showSectionOverview();
     }
 
     function showSectionOverview() {
-      const section = sections[currentSectionIndex].vocabs;
-      let html = `<h3>Sektionsüberblick</h3><table><tr><th>Latein</th><th>Grammatik</th><th>Deutsch</th></tr>`;
-      section.forEach(v => {
-        html += `<tr><td>${v.latin}
-          ${v.sub_voc_one ? `<br><small>${v.sub_voc_one.latin}</small>` : ""}
-          ${v.sub_voc_two ? `<br><small>${v.sub_voc_two.latin}</small>` : ""}</td>
-          <td>${v.grammar_info || ""}</td>
-          <td>${v.german.replace(/\n/g, "<br>")}</td></tr>`;
+      const sec = sections[currentSectionIndex];
+      let html = `<h3>${sec.name}</h3><table><tr><th>Latein</th><th>Grammatik</th><th>Deutsch</th></tr>`;
+      sec.vocabs.forEach(v => {
+        const sub = [v.sub_voc_one, v.sub_voc_two].filter(Boolean)
+          .map(sv => `<br><small>${sv.latin}: ${sv.german}</small>`).join('');
+        html += `<tr>
+          <td>${v.latin}${sub}</td>
+          <td>${v.grammar_info||""}</td>
+          <td>${v.german.replace(/\n/g,"<br>")}${sub}</td>
+        </tr>`;
       });
       html += `</table><button class="button" onclick="startSection()">Sektion starten</button>`;
-      document.getElementById("overview").innerHTML = html;
-      document.getElementById("overview").style.display = "block";
-      document.getElementById("section-select").style.display = "none";
+      document.getElementById("overview").innerHTML=html;
+      document.getElementById("overview").style.display="block";
     }
 
     function startSection() {
-      document.getElementById("overview").style.display = "none";
-      document.getElementById("card").style.display = "block";
+      document.getElementById("overview").style.display="none";
+      document.getElementById("card").style.display="block";
       loadCurrentCard();
     }
 
     function loadCurrentCard() {
-      const section = sections[currentSectionIndex].vocabs;
-      if (!section || currentWordIndex >= section.length) {
-        endSection();
-        return;
-      }
-      const voc = section[currentWordIndex];
-      document.getElementById("card-front").textContent = voc.latin +
-        (voc.sub_voc_one ? " | " + voc.sub_voc_one.latin : "") +
-        (voc.sub_voc_two ? ", " + voc.sub_voc_two.latin : "");
-      document.getElementById("card-back").innerHTML = generateAnswerHTML(voc);
-      document.getElementById("card-back").style.display = "none";
-      document.getElementById("know-btn").disabled = true;
-      document.getElementById("dont-know-btn").disabled = true;
-      document.getElementById("know-btn").className = "button grey";
-      document.getElementById("dont-know-btn").className = "button grey";
-
-      localStorage.setItem("sessionState", JSON.stringify({ section: currentSectionIndex, index: currentWordIndex }));
+      const sec = sections[currentSectionIndex].vocabs;
+      if (!sec || currentWordIndex>=sec.length) return endSection();
+      const v = sec[currentWordIndex];
+      document.getElementById("card-front").textContent = v.latin + (v.sub_voc_one? " | "+v.sub_voc_one.latin:"") + (v.sub_voc_two? ", "+v.sub_voc_two.latin:"");
+      document.getElementById("card-back").innerHTML = generateAnswerHTML(v);
+      document.getElementById("card-back").style.display="none";
+      document.getElementById("know-btn").disabled=true;
+      document.getElementById("dont-know-btn").disabled=true;
+      document.getElementById("know-btn").className="button grey";
+      document.getElementById("dont-know-btn").className="button grey";
+      localStorage.setItem("sessionState", JSON.stringify({section:currentSectionIndex,index:currentWordIndex}));
     }
 
-    function generateAnswerHTML(voc) {
-      let html = `<strong>${voc.german.replace(/\n/g, "<br>")}</strong>`;
-      if (voc.grammar_info) html += `<br><em>${voc.grammar_info}</em>`;
-      if (voc.sub_voc_one) html += `<br><small>${voc.sub_voc_one.latin}: ${voc.sub_voc_one.german}</small>`;
-      if (voc.sub_voc_two) html += `<br><small>${voc.sub_voc_two.latin}: ${voc.sub_voc_two.german}</small>`;
+    function generateAnswerHTML(v) {
+      let html = `<strong>${v.german.replace(/\n/g,"<br>")}</strong>`;
+      if(v.grammar_info) html+=`<br><em>${v.grammar_info}</em>`;
+      if(v.sub_voc_one) html+=`<br><small>${v.sub_voc_one.latin}: ${v.sub_voc_one.german}</small>`;
+      if(v.sub_voc_two) html+=`<br><small>${v.sub_voc_two.latin}: ${v.sub_voc_two.german}</small>`;
       return html;
     }
 
     function reveal() {
-      document.getElementById("card-back").style.display = "block";
-      document.getElementById("know-btn").disabled = false;
-      document.getElementById("dont-know-btn").disabled = false;
-      document.getElementById("know-btn").className = "button green";
-      document.getElementById("dont-know-btn").className = "button red";
+      document.getElementById("card-back").style.display="block";
+      document.getElementById("know-btn").disabled=false;
+      document.getElementById("dont-know-btn").disabled=false;
+      document.getElementById("know-btn").className="button green";
+      document.getElementById("dont-know-btn").className="button red";
     }
 
     function answered(knew) {
-      const vocIndex = sections[currentSectionIndex].start + currentWordIndex;
-      if (!results[vocIndex]) results[vocIndex] = { total: 0, right: 0 };
-      results[vocIndex].total++;
-      if (knew) results[vocIndex].right++;
-      sessionResults[vocIndex] = knew;
+      const globalIdx = sections[currentSectionIndex].start + currentWordIndex;
+      if (!results[globalIdx]) results[globalIdx]={right:0,total:0};
+      results[globalIdx].total++;
+      if(knew) results[globalIdx].right++;
+      sessionResults[globalIdx]=knew;
       saveHistory();
       currentWordIndex++;
       loadCurrentCard();
     }
 
     function endSection() {
-      alert("Sektion abgeschlossen!");
-      localStorage.removeItem("sessionState");
-      showMenu();
-    }
-
-    function saveHistory() {
-      localStorage.setItem("vocabResults", JSON.stringify(results));
-    }
-
-    function loadHistory() {
-      const stored = localStorage.getItem("vocabResults");
-      if (stored) results = JSON.parse(stored);
-    }
-
-    function showHistory() {
-      let html = `<h3>Lernverlauf</h3><table><tr><th>Latein</th><th>Richtig / Gesamt</th><th>%</th></tr>`;
-      vocabulary.forEach((voc, i) => {
-        const stat = results[i];
-        if (stat) {
-          const pct = stat.total > 0 ? Math.round(100 * stat.right / stat.total) : 0;
-          html += `<tr><td>${voc.latin}</td><td>${stat.right}/${stat.total}</td><td>${pct}%</td></tr>`;
-        }
-      });
-      html += `</table><button class="button" onclick="showMenu()">Zurück zum Menü</button>`;
-      document.getElementById("main-menu").style.display = "none";
-      document.getElementById("history-view").innerHTML = html;
-      document.getElementById("history-view").style.display = "block";
-    }
-
-    function resetAllProgress() {
-      if (confirm("Möchtest du wirklich den gesamten Lernfortschritt löschen?")) {
-        localStorage.removeItem("vocabResults");
+      const next = currentSectionIndex+1;
+      if(sections[next] && sections[next].isCustom) {
+        currentSectionIndex=next;
+        currentWordIndex=0;
+        sessionResults={};
+        loadCurrentCard();
+      } else {
+        alert("Sektion abgeschlossen!");
         localStorage.removeItem("sessionState");
-        results = {};
         showMenu();
       }
     }
 
-    function exportProgress() {
-      const data = localStorage.getItem("vocabResults");
-      const blob = new Blob([data], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "vokabel_fortschritt.json";
-      a.click();
-    }
-    
-    function importProgress(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          localStorage.setItem("vocabResults", JSON.stringify(imported));
-          alert("Fortschritt importiert!");
-          loadHistory();
-        } catch (err) {
-          alert("Ungültige Datei!");
-        }
-      };
-      reader.readAsText(file);
+    function saveHistory(){ localStorage.setItem("vocabResults",JSON.stringify(results)); }
+    function loadHistory(){ const s=localStorage.getItem("vocabResults"); if(s) results=JSON.parse(s);  }
+
+    function showHistory() {
+      let html=`<h3>Lernverlauf & Filter</h3>
+        <div>
+          <label>Max. geübt: <input type="number" id="filter-max-total" value="999"></label>
+          <label>Max. Erfolg (%): <input type="number" id="filter-max-success" value="100"></label>
+          <button class="button" onclick="filterAndQuiz()">Quiz mit Filter starten</button>
+        </div>`;
+      html+=`<table><tr><th>Latein</th><th>Deutsch</th><th>Erfolg</th></tr>`;
+      vocabulary.forEach((v,i)=>{
+        const s=results[i]||{right:0,total:0};
+        const pct = s.total?Math.round(100*s.right/s.total):0;
+        html+=`<tr><td>${v.latin}</td><td>${v.german.split("\n").join("<br>")}</td><td>${pct}% (${s.right}/${s.total})</td></tr>`;
+      });
+      html+=`</table><br><button class="button" onclick="showMenu()">Zurück</button>`;
+      document.getElementById("main-menu").style.display="none";
+      document.getElementById("history-view").innerHTML=html;
+      document.getElementById("history-view").style.display="block";
     }
 
+    function filterAndQuiz() {
+      const maxTotal=parseInt(document.getElementById("filter-max-total").value);
+      const maxSuccess=parseInt(document.getElementById("filter-max-success").value);
+      const filtered=[];
+      vocabulary.forEach((v,i)=>{
+        const s=results[i];
+        if(!s||s.total>maxTotal) return;
+        const pct=s.total?Math.round(100*s.right/s.total):0;
+        if(pct<=maxSuccess) filtered.push({...v,__index:i});
+      });
+      if(!filtered.length){ alert("Keine passenden Vokabeln."); return; }
+      const customs=[];
+      for(let i=0;i<filtered.length;i+=sectionSize){
+        const chunk=filtered.slice(i,i+sectionSize);
+        customs.push({vocabs:chunk, start:chunk[0].__index, end:chunk[chunk.length-1].__index,
+                      name:`Custom-Quiz ${customs.length+1}`, isCustom:true});
+      }
+      sections=sections.filter(s=>!s.isCustom).concat(customs);
+      currentSectionIndex=sections.findIndex(s=>s.isCustom);
+      currentWordIndex=0;
+      sessionResults={};
+      let html=`<h3>Gefilterte Vokabeln – ${filtered.length}</h3><table><tr><th>Latein</th><th>Deutsch</th></tr>`;
+      filtered.forEach(v=> { html+=`<tr><td>${v.latin}</td><td>${v.german}</td></tr>`; });
+      html+=`</table><button class="button" onclick="startFilteredQuiz()">Quiz starten</button>`;
+      document.getElementById("history-view").innerHTML=html;
+    }
+    function startFilteredQuiz(){
+      document.getElementById("history-view").style.display="none";
+      document.getElementById("card").style.display="block";
+      loadCurrentCard();
+    }
+
+    function resetAllProgress(){
+      if(confirm("Fortschritt löschen?")){
+        localStorage.removeItem("vocabResults");
+        localStorage.removeItem("sessionState");
+        results={};
+        showMenu();
+      }
+    }
+    function exportProgress(){
+      const blob=new Blob([localStorage.getItem("vocabResults")||"{}"],{type:"application/json"});
+      const a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="fortschritt.json";
+      a.click();
+    }
+    function importProgress(e){
+      const f=e.target.files[0];
+      if(!f) return;
+      const r=new FileReader();
+      r.onload=ev=>{
+        try{ localStorage.setItem("vocabResults",ev.target.result); loadHistory(); alert("Import erfolgreich"); }
+        catch{ alert("Fehler beim Import"); }
+      };
+      r.readAsText(f);
+    }
   </script>
 </body>
 </html>
