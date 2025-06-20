@@ -51,8 +51,8 @@ for i, voc in enumerate(raw_vocabulary):
     #print("-", parsed_voc)
     #if i % 3 == 3-1:
     #    print()
-    if parsed_voc["latin"].startswith("b"):
-        break
+    #if parsed_voc["latin"].startswith("b"):
+    #    break
     parsed_vocabulary.append(parsed_voc)
 import json
 
@@ -61,18 +61,18 @@ print(voc_indecies)
 
 pages = {
     4: ("a, ab", "atque, ac"),
-    5: ("attingere", "auxilium"),#"concilium"),
- #   6: ("concurrere", "de"),
- #   7: ("debere", "evocare"),
- #   8: ("e, ex", "huc"),
- #   9: ("iam", "item"),
- #   10: ("iter", "munire"),
- #   11: ("munitio", "ostendere"),
- #   12: ("pabulum", "praesens"),
- #   13: ("praesidium", "quo"),
- #   14: ("quod", "spes"),
- #   15: ("statuere", "uti"),
- #   16: ("vadum", "vulnus"),
+    5: ("attingere", "concilium"),
+    6: ("concurrere", "de"),
+    7: ("debere", "evocare"),
+    8: ("e, ex", "huc"),
+    9: ("iam", "item"),
+    10: ("iter", "munire"),
+    11: ("munitio", "ostendere"),
+    12: ("pabulum", "praesens"),
+    13: ("praesidium", "quo"),
+    14: ("quod", "spes"),
+    15: ("statuere", "uti"),
+    16: ("vadum", "vulnus"),
 }
 
 content = {

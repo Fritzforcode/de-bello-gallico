@@ -30,6 +30,7 @@
     </div>
   </div>
 
+  <!-- Section for vocabulary quiz card -->
   <div class="card" id="card" style="display:none;">
     <h2 id="card-front">LATIN</h2>
     <div id="card-back" style="display:none;"></div>
@@ -43,8 +44,11 @@
     </div>
   </div>
 
+  <!-- Overviews and selection screens -->
   <div class="card" id="overview" style="display:none;"></div>
-  <div class="card" id="section-select" style="display:none;"></div>
+  <div class="card" id="section-select" style="display:none;">
+    <button class="button" onclick="showMenu()" style="margin-bottom:1rem;">Zurück</button>
+  </div>
   <div class="card history" id="history-view" style="display:none;"></div>
 
   <script>
@@ -53,6 +57,9 @@
     let currentSectionIndex = 0, currentWordIndex = 0;
     let results = {}, sessionResults = {}, sessionState = null;
 
+    // Load vocabulary data
+    // IMPORTANT: DO NOT REMOVE THESE TWO COMMENTS AROUND fetch
+    //            ALSO ALWAYS KEEP fetch and DO NOT MODIFY IT
     //<!-- START VOCABULARY EMBED -->
     fetch("vocabulary.json")
       .then(r => r.json())
@@ -64,6 +71,7 @@
         checkSessionResume();
       });
     //<!-- END VOCABULARY EMBED -->
+    
 
     function checkSessionResume() {
       const saved = localStorage.getItem("sessionState");
@@ -79,26 +87,29 @@
           localStorage.removeItem("sessionState");
           showMenu();
         }
-      } else showMenu();
+      } else {
+        showMenu();
+      }
     }
 
     function splitSections() {
       sections = [];
-      for (let i = 0; i < vocabulary.length; i += sectionSize) {
+      for (let i=0; i<vocabulary.length; i+=sectionSize) {
         const start = i;
-        const end = Math.min(i + sectionSize - 1, vocabulary.length - 1);
-        const vocabs = vocabulary.slice(start, end + 1);
+        const end = Math.min(i+sectionSize-1, vocabulary.length-1);
+        const vocabs = vocabulary.slice(start, end+1);
         const includedPages = Object.entries(pages)
-          .filter(([_,rng]) => !(rng[1] < start || rng[0] > end))
+          .filter(([_,rng]) => !(rng[1]<start || rng[0]>end))
           .map(([pg]) => parseInt(pg));
-        const plabel = includedPages.length === 1 ? `S.${includedPages[0]}` : `S.${Math.min(...includedPages)}–${Math.max(...includedPages)}`;
+        const plabel = includedPages.length===1 ? `S.${includedPages[0]}` : `S.${Math.min(...includedPages)}–${Math.max(...includedPages)}`;
         const sectionName = `${vocabulary[start].latin} – ${vocabulary[end].latin} (${plabel})`;
-        sections.push({ vocabs, start, end, name: sectionName, isCustom:false});
+        sections.push({ vocabs, start, end, name: sectionName, isCustom:false });
       }
     }
 
     function showSectionSelect() {
       let html = `<h3>Wähle eine Sektion</h3>`;
+      html += `<button class="button" onclick="showMenu()" style="margin-bottom:1rem;">Zurück</button>`;
       html += `<strong>Vordefinierte Lektionen:</strong><br>`;
       sections.forEach((sec,i) => {
         if (!sec.isCustom) html += `<button class="button" onclick="selectSection(${i})">${sec.name}</button><br>`;
@@ -149,7 +160,7 @@
 
     function loadCurrentCard() {
       const sec = sections[currentSectionIndex].vocabs;
-      if (!sec || currentWordIndex>=sec.length) return endSection();
+      if (!sec || currentWordIndex >= sec.length) return endSection();
       const v = sec[currentWordIndex];
       document.getElementById("card-front").textContent = v.latin + (v.sub_voc_one? " | "+v.sub_voc_one.latin:"") + (v.sub_voc_two? ", "+v.sub_voc_two.latin:"");
       document.getElementById("card-back").innerHTML = generateAnswerHTML(v);
@@ -158,7 +169,7 @@
       document.getElementById("dont-know-btn").disabled=true;
       document.getElementById("know-btn").className="button grey";
       document.getElementById("dont-know-btn").className="button grey";
-      localStorage.setItem("sessionState", JSON.stringify({section:currentSectionIndex,index:currentWordIndex}));
+      localStorage.setItem("sessionState", JSON.stringify({section:currentSectionIndex, index:currentWordIndex}));
     }
 
     function generateAnswerHTML(v) {
@@ -189,27 +200,40 @@
     }
 
     function endSection() {
-      const next = currentSectionIndex+1;
-      if(sections[next] && sections[next].isCustom) {
-        currentSectionIndex=next;
-        currentWordIndex=0;
-        sessionResults={};
+      const nextIdx = currentSectionIndex + 1;
+      if (sections[nextIdx] && sections[nextIdx].isCustom) {
+        currentSectionIndex = nextIdx;
+        currentWordIndex = 0;
+        sessionResults = {};
         loadCurrentCard();
       } else {
         alert("Sektion abgeschlossen!");
         localStorage.removeItem("sessionState");
-        showMenu();
+        showMenu(); // Return to menu after finishing
       }
     }
 
+    function showMenu() {
+      document.getElementById("main-menu").style.display = "block";
+      document.getElementById("card").style.display = "none";
+      document.getElementById("overview").style.display = "none";
+      document.getElementById("section-select").style.display = "none";
+      document.getElementById("history-view").style.display = "none";
+    }
+
     function saveHistory(){ localStorage.setItem("vocabResults",JSON.stringify(results)); }
-    function loadHistory(){ const s=localStorage.getItem("vocabResults"); if(s) results=JSON.parse(s);  }
+    function loadHistory(){ 
+      const s=localStorage.getItem("vocabResults"); 
+      if(s) results=JSON.parse(s);  
+    }
 
     function showHistory() {
       let html=`<h3>Lernverlauf & Filter</h3>
         <div>
           <label>Max. geübt: <input type="number" id="filter-max-total" value="999"></label>
           <label>Max. Erfolg (%): <input type="number" id="filter-max-success" value="100"></label>
+          <label>Min. geübt: <input type="number" id="filter-min-total" value="0"></label>
+          <label>Max. Vokabeln: <input type="number" id="filter-max-vocabs" value="10"></label>
           <button class="button" onclick="filterAndQuiz()">Quiz mit Filter starten</button>
         </div>`;
       html+=`<table><tr><th>Latein</th><th>Deutsch</th><th>Erfolg</th></tr>`;
@@ -225,59 +249,95 @@
     }
 
     function filterAndQuiz() {
-      const maxTotal=parseInt(document.getElementById("filter-max-total").value);
-      const maxSuccess=parseInt(document.getElementById("filter-max-success").value);
-      const filtered=[];
-      vocabulary.forEach((v,i)=>{
-        const s=results[i];
-        if(!s||s.total>maxTotal) return;
+      const maxTotal = parseInt(document.getElementById("filter-max-total").value);
+      const maxSuccess = parseInt(document.getElementById("filter-max-success").value);
+      const minTotal = parseInt(document.getElementById("filter-min-total").value);
+      const maxVocabCount = parseInt(document.getElementById("filter-max-vocabs").value);
+      
+      // Filter vocab based on min/max total and success
+      let filtered = [];
+      vocabulary.forEach((v,i) => {
+        const s=results[i]||{right:0,total:0};
+        if (s.total < minTotal || s.total > maxTotal) return;
         const pct=s.total?Math.round(100*s.right/s.total):0;
-        if(pct<=maxSuccess) filtered.push({...v,__index:i});
+        if (pct > maxSuccess) return;
+        filtered.push({vocab:v, index:i, successPct: pct, total:s.total});
       });
+      
+      // Sort by worst success rate
+      filtered.sort((a,b) => a.successPct - b.successPct);
+      
+      // Take top maxVocabCount
+      filtered = filtered.slice(0, maxVocabCount);
+      
       if(!filtered.length){ alert("Keine passenden Vokabeln."); return; }
-      const customs=[];
-      for(let i=0;i<filtered.length;i+=sectionSize){
-        const chunk=filtered.slice(i,i+sectionSize);
-        customs.push({vocabs:chunk, start:chunk[0].__index, end:chunk[chunk.length-1].__index,
-                      name:`Custom-Quiz ${customs.length+1}`, isCustom:true});
+      
+      // Create custom sections from filtered
+      sections = sections.filter(s=>!s.isCustom); // Keep only predefined sections
+      let customs = [];
+      for(let i=0; i<filtered.length; i+=sectionSize){
+        const chunk = filtered.slice(i,i+sectionSize);
+        const indices = chunk.map(c=>c.index);
+        customs.push({
+          vocabs: chunk.map(c=>vocabulary[c.index]),
+          start: Math.min(...indices),
+          end: Math.max(...indices),
+          name:`Custom-Quiz ${sections.length + customs.length +1}`,
+          isCustom:true
+        });
       }
-      sections=sections.filter(s=>!s.isCustom).concat(customs);
-      currentSectionIndex=sections.findIndex(s=>s.isCustom);
-      currentWordIndex=0;
-      sessionResults={};
+      
+      // Append custom sections
+      sections = sections.concat(customs);
+      // Start with the first custom section
+      currentSectionIndex = sections.findIndex(s=>s.isCustom);
+      currentWordIndex = 0;
+      sessionResults = {};
+      
+      // Show a simple list before quiz
       let html=`<h3>Gefilterte Vokabeln – ${filtered.length}</h3><table><tr><th>Latein</th><th>Deutsch</th></tr>`;
-      filtered.forEach(v=> { html+=`<tr><td>${v.latin}</td><td>${v.german}</td></tr>`; });
+      filtered.forEach(c => {
+        html+=`<tr><td>${c.vocab.latin}</td><td>${c.vocab.german}</td></tr>`;
+      });
       html+=`</table><button class="button" onclick="startFilteredQuiz()">Quiz starten</button>`;
       document.getElementById("history-view").innerHTML=html;
     }
-    function startFilteredQuiz(){
+
+    function startFilteredQuiz() {
       document.getElementById("history-view").style.display="none";
       document.getElementById("card").style.display="block";
       loadCurrentCard();
     }
 
-    function resetAllProgress(){
-      if(confirm("Fortschritt löschen?")){
+    function resetAllProgress() {
+      if (confirm("Fortschritt löschen?")) {
         localStorage.removeItem("vocabResults");
         localStorage.removeItem("sessionState");
-        results={};
+        results = {};
         showMenu();
       }
     }
-    function exportProgress(){
+
+    function exportProgress() {
       const blob=new Blob([localStorage.getItem("vocabResults")||"{}"],{type:"application/json"});
       const a=document.createElement("a");
       a.href=URL.createObjectURL(blob);
       a.download="fortschritt.json";
       a.click();
     }
-    function importProgress(e){
+
+    function importProgress(e) {
       const f=e.target.files[0];
       if(!f) return;
       const r=new FileReader();
       r.onload=ev=>{
-        try{ localStorage.setItem("vocabResults",ev.target.result); loadHistory(); alert("Import erfolgreich"); }
-        catch{ alert("Fehler beim Import"); }
+        try{
+          localStorage.setItem("vocabResults",ev.target.result);
+          loadHistory();
+          alert("Import erfolgreich");
+        } catch {
+          alert("Fehler beim Import");
+        }
       };
       r.readAsText(f);
     }
