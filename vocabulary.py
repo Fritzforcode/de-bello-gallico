@@ -83,7 +83,7 @@ vocabulary = [
 ["casus", "-us m", "Ereignis, Situation", [
     ["casu", "durch Zufall"]]],
 ["causa (Subst.)", "-ae f", "1. Sache\n2. Ursache, Grund"],
-["causa (Präp.)l", "wegen"],
+["causa (Präp.)", "wegen"],
 ["cedere", "cessi, cessum", "zurückweichen"],
 ["celeritas", "-atis f", "Schnelligkeit"],
 
@@ -651,7 +651,7 @@ vocabulary = [
 ["sui", "sibi, se", "seiner, sich"],
 ["summa", "-ae f", "Gesammtheit"],
 ["summus", "(-a, -um)", "der höchste"],
-["superare", "-vi, -tum", "1. überlegen sein\n2. übeetreffen"],
+["superare", "-vi, -tum", "1. überlegen sein\n2. übertreffen"],
 ["superior", "(-ius), -oris", "1. höher\n2. früher"],
 ["supplicium", "-ii n", "Bestrafung"],
 ["supra", "oben"],
@@ -666,7 +666,7 @@ vocabulary = [
     ["non tantum", "nicht nur"]]],
 ["telum", "-i n", "Geschoß"],
 ["tempestas", "-atis f", "1. Wetter\n2. Unwetter"],
-["tempus", "-poris n" "Zeit"],
+["tempus", "-poris n", "Zeit"],
 ["tenere", "-ui, -tentum", "1. haben, halten\n2. besetzt halten"],
 ["tergum", "-i n", "Rücken", [
     ["terga vertere", "fliehen"]]],
@@ -699,7 +699,7 @@ vocabulary = [
 ["unus", "(-a, -um)", "einer, ein"],
 ["usus", "-us m", "1. Nutzen\n2. Übung, Erfahrung"],
 ["ut", "1. wie\n2. daß, damit"],
-["uterque", "(utraque, utrumque)", "jerder"],
+["uterque", "(utraque, utrumque)", "jeder"],
 ["uti", "usus sum", "gebrauchen"],
 
 # -------- V -------- #
